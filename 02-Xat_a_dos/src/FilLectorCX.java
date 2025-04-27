@@ -9,7 +9,6 @@ public class FilLectorCX extends Thread {
     
     @Override
     public void run() {
-        System.out.println("Fil de lectura iniciat");
         try {
             String missatge;
             while (true) {

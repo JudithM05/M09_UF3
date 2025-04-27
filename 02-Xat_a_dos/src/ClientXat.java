@@ -15,7 +15,6 @@ public class ClientXat {
             socket = new Socket(HOST, PORT);
             System.out.println("Client connectat a " + HOST + ":" + PORT);
             
-            // Crear streams
             out = new ObjectOutputStream(socket.getOutputStream());
             in = new ObjectInputStream(socket.getInputStream());
             System.out.println("Flux d'entrada i sortida creat.");
@@ -50,20 +49,18 @@ public class ClientXat {
         client.connecta();
         
         try {
-            // Crear i iniciar fil de lectura
             FilLectorCX filLector = new FilLectorCX(client.in);
             filLector.start();
+            System.out.println("Fil de lectura iniciat");
             
-            // Enviar missatges
             Scanner scanner = new Scanner(System.in);
             String missatge;
-            System.out.print("Missatge ('sortir' per tancar): ");
             do {
+                System.out.print("Missatge ('sortir' per tancar): ");
                 missatge = scanner.nextLine();
                 client.enviarMissatge(missatge);
             } while (!missatge.equals(MSG_SORTIR));
             
-            // Tancar recursos
             scanner.close();
             client.tancarClient();
         } catch (Exception e) {

@@ -20,7 +20,7 @@ public class ServidorXat {
     public void pararServidor() {
         try {
             serverSocket.close();
-            System.out.println("Servidor aturat");
+            System.out.println("Servidor aturat.");
         } catch (Exception e) {
             System.out.println("Error aturant el servidor");
         }
@@ -45,24 +45,19 @@ public class ServidorXat {
             Socket clientSocket = servidor.serverSocket.accept();
             System.out.println("Client connectat: " + clientSocket.getInetAddress());
             
-            // Crear streams
             ObjectOutputStream out = new ObjectOutputStream(clientSocket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
             
-            // Enviar petició de nom
-            out.writeObject("Escriu el teu nom: ");
+            out.writeObject("Escriu el teu nom:");
             out.flush();
             
-            // Obtenir nom
             String nomClient = servidor.getNom(in);
             
-            // Crear i iniciar fil
             FilServidorXat filServidor = new FilServidorXat(in, nomClient);
             System.out.println("Fil de xat creat.");
             filServidor.start();
             System.out.println("Fil de " + nomClient + " iniciat");
             
-            // Enviar missatges
             Scanner scanner = new Scanner(System.in);
             String missatge;
             do {
@@ -72,10 +67,8 @@ public class ServidorXat {
                 out.flush();
             } while (!missatge.equals(MSG_SORTIR));
             
-            // Esperar al fil
             filServidor.join();
             
-            // Tancar socket
             clientSocket.close();
             scanner.close();
             servidor.pararServidor();
