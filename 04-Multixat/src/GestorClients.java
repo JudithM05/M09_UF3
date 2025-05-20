@@ -33,8 +33,13 @@ public class GestorClients extends Thread {
         } catch (Exception e) {
             System.out.println("Error rebent missatge. Sortint...");
         } finally {
+            if (nom != null) {
+                servidor.eliminarClient(nom);
+            }
             try {
-                client.close();
+                if (ois != null) ois.close();
+                if (oos != null) oos.close();
+                if (client != null) client.close();
             } catch (IOException e) {
                 System.out.println("Error tancant el socket del client.");
             }
@@ -44,6 +49,7 @@ public class GestorClients extends Thread {
     public void enviarMissatge(String remitent, String missatge) {
         try {
             oos.writeObject(missatge);
+            oos.flush();
         } catch (IOException e) {
             System.out.println("Error enviant missatge a " + remitent);
         }
@@ -86,7 +92,7 @@ public class GestorClients extends Thread {
                 }
                 break;
             default:
-                System.out.println("Missatge desconegut.");
+                System.out.println("Missatge desconegut: " + codi);
         }
     }
 }

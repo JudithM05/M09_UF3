@@ -6,7 +6,7 @@ public class ServidorXat {
     private static final int PORT = 9999;
     private static final String HOST = "localhost";
     private static final String MSG_SORTIR = "sortir";
-    Hashtable<String, GestorClients> clients = new Hashtable<>();
+    private Hashtable<String, GestorClients> clients = new Hashtable<>();
     private boolean sortir = false;
     private ServerSocket serverSocket;
 
@@ -39,6 +39,7 @@ public class ServidorXat {
     public synchronized void finalitzarXat() {
         System.out.println("Tancant tots els clients.");
         enviarMissatgeGrup(MSG_SORTIR);
+        System.out.println("DEBUG: multicast " + MSG_SORTIR);
         clients.clear();
         sortir = true;
         pararServidor();
@@ -46,6 +47,7 @@ public class ServidorXat {
 
     public synchronized void afegirClient(GestorClients client) {
         clients.put(client.getNom(), client);
+        System.out.println(client.getNom() + " connectat.");
         System.out.println("DEBUG: multicast Entra: " + client.getNom());
         enviarMissatgeGrup("Entra: " + client.getNom());
     }
@@ -67,10 +69,10 @@ public class ServidorXat {
     public synchronized void enviarMissatgePersonal(String dest, String remitent, String missatge) {
         GestorClients c = clients.get(dest);
         if (c != null) {
-            // Format: 1001#remitent#missatge
+            // Enviem al client amb format adequat
             String msg = Missatge.CODI_MSG_PERSONAL + "#" + remitent + "#" + missatge;
             c.enviarMissatge(remitent, msg);
-            System.out.println("Missatge de (" + remitent + "): " + missatge);
+            System.out.println("Missatge personal per (" + dest + ") de (" + remitent + "): " + missatge);
         } else {
             System.out.println("El client destinatari no existeix.");
         }

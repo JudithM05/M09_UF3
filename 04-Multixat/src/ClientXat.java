@@ -28,17 +28,27 @@ public class ClientXat {
             out.flush();
             System.out.println("Enviant missatge: " + missatge);
         } catch (IOException e) {
-            System.out.println("Error enviant missatge.");
+            if (out == null) {
+                System.out.println("oos null. Sortint...");
+            } else {
+                System.out.println("Error enviant missatge.");
+            }
         }
     }
 
     // Tanca el client
     public void tancarClient() {
         try {
-            if (in != null) in.close();
-            if (out != null) out.close();
-            if (socket != null) socket.close();
             System.out.println("Tancant client...");
+            if (in != null) {
+                System.out.println("Flux d'entrada tancat.");
+                in.close();
+            }
+            if (out != null) {
+                System.out.println("Flux de sortida tancat.");
+                out.close();
+            }
+            if (socket != null) socket.close();
         } catch (IOException e) {
             System.out.println("Error tancant client.");
         }
@@ -87,10 +97,14 @@ public class ClientXat {
                             sortir = true;
                             break;
                         case Missatge.CODI_MSG_PERSONAL:
-                            System.out.println("Missatge personal per (" + parts[1] + ") de (" + parts[0] + "): " + parts[2]);
+                            if (parts.length >= 3) {
+                                System.out.println("Missatge de (" + parts[1] + "): " + parts[2]);
+                            }
                             break;
                         case Missatge.CODI_MSG_GRUP:
-                            System.out.println(parts[1]);
+                            if (parts.length >= 2) {
+                                System.out.println(parts[1]);
+                            }
                             break;
                         default:
                             System.out.println("Missatge desconegut.");
@@ -106,7 +120,6 @@ public class ClientXat {
         lector.start();
 
         while (!sortir) {
-            ajuda();
             String opcio = sc.nextLine().trim();
             if (opcio.isEmpty()) {
                 sortir = true;
@@ -134,6 +147,10 @@ public class ClientXat {
                     break;
                 default:
                     System.out.println("Opció no vàlida.");
+            }
+
+            if (!sortir) {
+                ajuda();
             }
         }
 
