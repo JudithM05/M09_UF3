@@ -1,3 +1,6 @@
+// =======================
+// ClientXat.java (actualitzat)
+// =======================
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
@@ -8,7 +11,6 @@ public class ClientXat {
     private ObjectInputStream in;
     private boolean sortir = false;
 
-    // Connecta al servidor
     public void connecta() {
         try {
             socket = new Socket("localhost", 9999);
@@ -21,7 +23,6 @@ public class ClientXat {
         }
     }
 
-    // Envia un missatge a l'usuari
     public void enviarMissatge(String missatge) {
         try {
             out.writeObject(missatge);
@@ -36,7 +37,6 @@ public class ClientXat {
         }
     }
 
-    // Tanca el client
     public void tancarClient() {
         try {
             System.out.println("Tancant client...");
@@ -54,7 +54,6 @@ public class ClientXat {
         }
     }
 
-    // Mostra ajuda
     public void ajuda() {
         System.out.println("---------------------");
         System.out.println("Comandes disponibles:");
@@ -66,7 +65,6 @@ public class ClientXat {
         System.out.println("---------------------");
     }
 
-    // Pregunta i retorna una línia
     public String getLinea(Scanner sc, String missatge, boolean obligatori) {
         String input;
         do {
@@ -76,7 +74,6 @@ public class ClientXat {
         return input;
     }
 
-    // Executa el client
     public void executar() {
         Scanner sc = new Scanner(System.in);
         ajuda();
@@ -121,7 +118,7 @@ public class ClientXat {
 
         while (!sortir) {
             String opcio = sc.nextLine().trim();
-            if (opcio.isEmpty()) {
+            if (opcio.isEmpty() || opcio.equals("4")) {
                 sortir = true;
                 enviarMissatge(Missatge.getMissatgeSortirClient("Adéu"));
                 break;
@@ -149,9 +146,7 @@ public class ClientXat {
                     System.out.println("Opció no vàlida.");
             }
 
-            if (!sortir) {
-                ajuda();
-            }
+            if (!sortir) ajuda();
         }
 
         try {
@@ -168,4 +163,4 @@ public class ClientXat {
         client.connecta();
         client.executar();
     }
-}
+} // fi de classe
